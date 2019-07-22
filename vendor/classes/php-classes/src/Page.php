@@ -15,7 +15,7 @@ class Page {
     ];
 
     public function __construct($opts = array())
-    {
+    {                               // O último array sempre vai sobrescrever os anteriores 
         $this->options = array_merge($this->defaults, $opts);
 
         $config = array(
@@ -26,7 +26,7 @@ class Page {
 
         Tpl::configure( $config );
 
-        $this->tpl = new Tpl();
+        $this->tpl = new Tpl;
 
         $this->setData($this->options['data']);
 
