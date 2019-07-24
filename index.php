@@ -27,6 +27,11 @@ $app->get('/admin',function(){
 
 $app->get('/admin/login', function(){
 
+	if(isset($_SESSION[User::SESSION]))
+	{
+		header('location: /admin');
+		exit;
+	} 
 	$page = new PageAdmin([
 		'header'=>false,
 		'footer'=>false
@@ -36,16 +41,10 @@ $app->get('/admin/login', function(){
 });
 
 $app->post('/admin/login', function(){
-
-	if(isset($_SESSION[User::SESSION]))
-	{
+	
 	User::login($_POST['login'], $_POST['password']);
 	header('location: /admin');
 	exit;
-	}else{
-	header('location: /admin/login');
-	exit;
-	}
 
 });
 
@@ -68,7 +67,7 @@ $app->get('/admin/users', function(){
 
 });
 
-$app->get('/admin/users/crete', function(){
+$app->get('/admin/users/create', function(){
 
 	User::verifyLogin();
 	$page = new PageAdmin();
@@ -99,7 +98,24 @@ $app->post('/admin/users/crete', function(){
 $app->post('/admin/users/:iduser', function($iduser){
 
 	User::verifyLogin();
-	
+
+	$user = new User();
+
+ 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+
+ 	$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+
+ 		"cost"=>12
+
+ 	]);
+
+ 	$user->setData($_POST);
+
+	$user->save();
+
+	header("Location: /admin/users");
+ 	exit;
+
 });
 
 $app->run();

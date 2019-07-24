@@ -9,17 +9,17 @@ class Model {
     public function __call ($name, $args)
     {
         $method = substr($name, 0, 3);
-        $fieldname = substr($name, 3, strlen($name));
+        $fieldName = substr($name, 3, strlen($name));
 
         switch($method) 
         {
             case "get":
-                return $this->values[$fieldname];
+                return $this->values[$fieldName];
             break;
             
             case "set":
-                return $this->values[$fieldname] = $args[0];
-
+                 $this->values[$fieldName] = $args[0];
+            break;
         }
 
     }
