@@ -16,7 +16,7 @@ $app->get('/', function() {
 	$page->setTpl('index');
 
 });
-
+// Admin Get
 $app->get('/admin',function(){
 
 	User::verifyLogin();
@@ -24,7 +24,7 @@ $app->get('/admin',function(){
 	$page->setTpl('index');
 
 });
-
+// Admin Login
 $app->get('/admin/login', function(){
 
 	if(isset($_SESSION[User::SESSION]))
@@ -39,7 +39,7 @@ $app->get('/admin/login', function(){
 
 	$page->setTpl('login');
 });
-
+// Post login admin
 $app->post('/admin/login', function(){
 	
 	User::login($_POST['login'], $_POST['password']);
@@ -47,7 +47,7 @@ $app->post('/admin/login', function(){
 	exit;
 
 });
-
+// Logout admin
 $app->get('/admin/logout', function(){
 
 	User::logout();
@@ -55,7 +55,7 @@ $app->get('/admin/logout', function(){
 	exit;
 
 });
-
+// Listar usuarios
 $app->get('/admin/users', function(){
 
 	User::verifyLogin();
@@ -66,7 +66,7 @@ $app->get('/admin/users', function(){
 	));
 
 });
-
+// Criar usuarios
 $app->get('/admin/users/create', function(){
 
 	User::verifyLogin();
@@ -74,29 +74,34 @@ $app->get('/admin/users/create', function(){
 	$page->setTpl('users-create');
 
 });
-
+// Deletar usuário
 $app->get('/admin/users/:iduser/delete', function($iduser){
 
 	User::verifyLogin();
+	$user = new User();
+	$user->get((int)$iduser);
+	$user->delete($iduser);
+	header("location: /admin/users");
+	exit;
 	
 });
-
+// Atualizar usuario (GET)
 $app->get('/admin/users/:iduser', function($iduser){
 
 	User::verifyLogin();
+
+	$user = new User();
+	$user->get((int)$iduser);
+
 	$page = new PageAdmin();
-	$page->setTpl('users-update');
+	$page->setTpl('users-update', array(
+		"user"=>$user->getValues()
+	));
 
 });
-
-$app->post('/admin/users/crete', function(){
+// Criar usuarios (Verificar se está logado)
+$app->post('/admin/users/create', function(){
 	
-	User::verifyLogin();
-
-});
-
-$app->post('/admin/users/:iduser', function($iduser){
-
 	User::verifyLogin();
 
 	$user = new User();
@@ -115,6 +120,19 @@ $app->post('/admin/users/:iduser', function($iduser){
 
 	header("Location: /admin/users");
  	exit;
+
+});
+
+$app->post('/admin/users/:iduser', function($iduser){
+
+	User::verifyLogin();
+	$user = new User();
+	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+	$user->get((int)$iduser);
+	$user->setData($_POST);
+	$user->update();
+	header("location: /admin/users");
+	exit;
 
 });
 
