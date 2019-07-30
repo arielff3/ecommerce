@@ -50,8 +50,12 @@
               <input type="number" class="form-control" id="vlweight" name="vlweight" step="0.01" placeholder="0.00">
             </div>
             <div class="form-group">
-                <label for="desurl">URL</label>
-                <input type="url" class="form-control" id="desurl" name="desurl">
+              <label for="desurl">URL</label>
+              <input type="text" class="form-control" id="desurl" name="desurl">
+            </div>
+            <div class="form-group">
+                <label for="desphoto">Foto</label>
+                <input type="file" class="form-control" id="desphoto" name="desphoto">
               </div>
           </div>
           <!-- /.box-body -->
