@@ -22,6 +22,7 @@ class Category extends Model {
         ));
 
         $this->setData($results[0]);
+        Category::updateFile();
     }
 
     // Este método é responsável por pegar um usuário utilizando somente o id que é passado por parâmetro
@@ -54,7 +55,22 @@ class Category extends Model {
         $sql->query("DELETE FROM tb_categories WHERE idcategory = :idcategory", array (
             ':idcategory'=>$this->getidcategory()
         ));
+    
+        Category::updateFile();
 
-        
     }
+
+    public static function updateFile()
+    {
+        $category = Category::listAll();
+
+        $html = array();
+
+        foreach ($category as $row) {
+            array_push($html, '<li><a href="/categories/'.$row['idcategory'].'">'.$row['descategory'].'</a></li>');
+        }
+    
+        file_put_contents($_SERVER['DOCUMENT_ROOT']. DIRECTORY_SEPARATOR."views".DIRECTORY_SEPARATOR."category-menu.html", implode('', $html));
+    }
+
 }    
