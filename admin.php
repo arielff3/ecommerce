@@ -44,3 +44,4 @@ $app->get('/admin/logout', function(){
 	exit;
 
 });
+

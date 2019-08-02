@@ -9,8 +9,11 @@ class Product extends Model {
 
     public static function listAll()
     {
+        
         $sql = new Sql();
+        
         return $sql->select("SELECT * FROM tb_products ORDER BY desproduct ");
+        
     }
 
     public static function checkList($list)
@@ -51,6 +54,7 @@ class Product extends Model {
     public function get($idproducts)
     {
         $sql = new Sql();
+        
         $results = $sql->select("SELECT * FROM tb_products WHERE idproduct = :idproduct", array(
             ':idproduct'=>$idproducts
         ));
@@ -61,6 +65,7 @@ class Product extends Model {
     public function delete()
     {
         $sql = new Sql();
+        
         $sql->query("DELETE FROM tb_products WHERE idproduct = :idproduct", array (
             ':idproduct'=>$this->getidproduct()
         ));
@@ -101,6 +106,7 @@ class Product extends Model {
     {
 
         $extension = explode('.',$file['name']);
+        
         $extension = end($extension);
 
         switch($extension)      
@@ -131,5 +137,29 @@ class Product extends Model {
 
         $this->checkPhoto();
 
+    }
+
+    public function getFromURL($desurl)
+    {
+        $sql = new Sql();
+        
+        $rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1", array(
+            ':desurl'=>$desurl
+        ));
+
+        $this->setData($rows[0]);
+
+    }
+
+    public function getCategories()
+    {
+
+        $sql = new Sql();
+
+        return $sql->select(
+        " SELECT * FROM tb_categories a INNER JOIN tb_productscategories b ON a.idcategory = b.idcategory WHERE b.idproduct = :idproduct
+        ", array(
+            ':idproduct'=>$this->getidproduct()  
+        ));
     }
 }    
